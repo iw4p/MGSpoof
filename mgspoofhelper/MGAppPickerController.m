@@ -15,8 +15,8 @@ CFPropertyListRef MGCopyAnswer(CFStringRef);
 
 @interface LSResourceProxy : NSObject
 @property (nonatomic, readonly) NSDictionary *iconsDictionary;
-@property (nonatomic, copy) NSArray *_boundIconFileNames; // iOS 11 and up
-@property (nonatomic, copy) NSArray *boundIconFileNames; // iOS 10 and below
+// @property (nonatomic, copy) NSArray *_boundIconFileNames; // iOS 11 and up
+// @property (nonatomic, copy) NSArray *boundIconFileNames; // iOS 10 and below
 @end
 
 @interface LSApplicationProxy : LSResourceProxy
@@ -26,7 +26,7 @@ CFPropertyListRef MGCopyAnswer(CFStringRef);
 @property(nonatomic, readonly) NSArray *appTags;
 -(NSString *)localizedName; // app name under icon
 @end
- 
+
 @implementation MGAppPickerController
 
 // Instead of using ipc to interact with springboard and get information and use SBApplicationController to do this, decided to get info using MobileCoreServices framework
@@ -70,10 +70,11 @@ CFPropertyListRef MGCopyAnswer(CFStringRef);
 	// so mgspoofhelper doesn't show up in list
 	if ([app.applicationIdentifier isEqualToString:@"com.tonyk7.mgspoofhelper"])
 		return NO;
-	BOOL iOS11AndPlus = kCFCoreFoundationVersionNumber > 1400;
-	NSArray *iconNames = iOS11AndPlus ? app._boundIconFileNames : app.boundIconFileNames;
+	// BOOL iOS11AndPlus = kCFCoreFoundationVersionNumber > 1400;
+	// NSArray *iconNames = iOS11AndPlus ? app._boundIconFileNames : app.boundIconFileNames;
 	// springboard type is "Hidden" so allow it if it's springboard regardless of type
-	if ((app.iconsDictionary || iconNames) && (![app.appTags containsObject:@"hidden"] || [app.applicationIdentifier isEqualToString:@"com.apple.springboard"]))
+  // if ((app.iconsDictionary || iconNames) && (![app.appTags containsObject:@"hidden"] || [app.applicationIdentifier isEqualToString:@"com.apple.springboard"]))
+  if ((app.iconsDictionary) && (![app.appTags containsObject:@"hidden"] || [app.applicationIdentifier isEqualToString:@"com.apple.springboard"]))
 		return YES;
 	return NO;
 }
@@ -82,7 +83,7 @@ CFPropertyListRef MGCopyAnswer(CFStringRef);
 	[super loadView];
 	self.tableView.dataSource = self;
 	self.tableView.allowsSelection = NO;
-	
+
 	self.navigationItem.title = @"Select apps";
 
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleDone target:self action:@selector(back)];
@@ -132,7 +133,7 @@ CFPropertyListRef MGCopyAnswer(CFStringRef);
 	// resize image
 	UIGraphicsBeginImageContextWithOptions(CGSizeMake(29, 29), NO, 0.0);
 	[imageView.image drawInRect:CGRectMake(0, 0, 29, 29)];
-	UIImage *fixedImage = UIGraphicsGetImageFromCurrentImageContext();    
+	UIImage *fixedImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	imageView.image = fixedImage;
 	// mask imageview
@@ -163,7 +164,7 @@ CFPropertyListRef MGCopyAnswer(CFStringRef);
 	cell.detailTextLabel.text = bundleID;
 
 	UIImage *image = [UIImage _applicationIconImageForBundleIdentifier:bundleID format:0 scale:[UIScreen mainScreen].scale];
-	if (CGSizeEqualToSize(image.size, CGSizeMake(29, 29))) 
+	if (CGSizeEqualToSize(image.size, CGSizeMake(29, 29)))
 		cell.imageView.image = image;
 	else {
 		// bad way to do this but whatever
