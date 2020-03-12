@@ -27,6 +27,7 @@ CFPropertyListRef MGCopyAnswer(CFStringRef);
 
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceRoated) name:UIDeviceOrientationDidChangeNotification object:nil];
+	
 }
 
 -(void)deviceRoated {
