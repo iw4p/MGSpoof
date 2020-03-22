@@ -1,5 +1,8 @@
 # MGSpoofer (spoof MGCopyAnswer)
 
+#### update
+I've just update it and make it compatible with iOS 13. and it's working now.
+
 #### update log
  _0.0.2_:
 - added randomize value button (follows same format as original)
